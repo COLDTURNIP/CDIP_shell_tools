@@ -300,7 +300,7 @@ function buildtag () {
         mkfilelist
 
         echo "Construct file list for C&C++ ..."
-        grep "\.[ch]$\|\.(cpp)$" filelist > filelist_c
+        grep "\(\.[ch]$\)\|\(\.cpp\)\|\(\.hpp\)$" filelist > filelist_c
         if [ -s filelist_c ]; then
             echo "Creating cscope index for C&C++ ..."
             cscope -qvRUb -ifilelist_c | \
