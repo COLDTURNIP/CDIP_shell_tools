@@ -119,7 +119,7 @@ function initproj() {
         echo "Error: There's .cdip folder. If you are sure to setup a project here, please remove it first."
         return
     elif [[ -d $PROJ_UTIL_DIR ]]; then
-        cp -r $PROJ_UTIL_DIR .cdip
+        cp -Lr $PROJ_UTIL_DIR .cdip
         settop
         echo ""
         echo "    Note: Do not forget overriding the activate/deactivate functions."
