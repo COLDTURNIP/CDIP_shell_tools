@@ -11,15 +11,32 @@
 
 
 
+####################
+# Global Variables #
+####################
+
+export CDIP_ENV=".cdip"
+
+
 #####################
 # Utility Functions #
 #####################
+
+function getCdipTagPath()
+{
+    local ret=$(gettop)
+    if [[ -d $ret/$CDIP_ENV ]]; then
+        echo $ret/$CDIP_ENV
+    else
+        echo $ret
+    fi
+}
 
 case `uname -s` in
     Darwin)
         function sgrep()
         {
-            T=$(gettop)    
+            T=$(getCdipTagPath)    
             if [[ -f $T/filelist ]]; then
                 echo "Searching in cache file..."
                 (
@@ -36,7 +53,7 @@ case `uname -s` in
     *)
         function sgrep()
         {
-            T=$(gettop)    
+            T=$(getCdipTagPath)    
             if [[ -f $T/filelist ]]; then
                 echo "Searching in cache file..."
                 (
@@ -53,7 +70,7 @@ esac
 
 function jgrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist_j ]]; then
         echo "Searching in cache file..."
         (
@@ -68,7 +85,7 @@ function jgrep()
 
 function cgrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist_c ]]; then
         echo "Searching in cache file..."
         (
@@ -83,7 +100,7 @@ function cgrep()
 
 function hgrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist_c ]]; then
         echo "Searching in cache file..."
         (
@@ -98,7 +115,7 @@ function hgrep()
 
 function resgrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist ]]; then
         echo "Searching in cache file..."
         (
@@ -113,7 +130,7 @@ function resgrep()
 
 function xmlgrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist ]]; then
         echo "Searching in cache file..."
         (
@@ -128,7 +145,7 @@ function xmlgrep()
 
 function pygrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist ]]; then
         echo "Searching in cache file..."
         (
@@ -143,7 +160,7 @@ function pygrep()
 
 function vgrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist ]]; then
         echo "Searching in cache file..."
         (
@@ -158,7 +175,7 @@ function vgrep()
 
 function allgrep()
 {
-    T=$(gettop)    
+    T=$(getCdipTagPath)    
     if [[ -f $T/filelist ]]; then
         echo "Searching in cache file..."
         (
@@ -175,7 +192,7 @@ case `uname -s` in
     Darwin)
         function mgrep()
         {
-            T=$(gettop)    
+            T=$(getCdipTagPath)    
             if [[ -f $T/filelist ]]; then
                 echo "Searching in cache file..."
                 (
@@ -190,7 +207,7 @@ case `uname -s` in
 
         function treegrep()
         {
-            T=$(gettop)    
+            T=$(getCdipTagPath)    
             if [[ -f $T/filelist ]]; then
                 echo "Searching in cache file..."
                 (
@@ -207,7 +224,7 @@ case `uname -s` in
     *)
         function mgrep()
         {
-            T=$(gettop)    
+            T=$(getCdipTagPath)    
             if [[ -f $T/filelist ]]; then
                 echo "Searching in cache file..."
                 (
@@ -222,7 +239,7 @@ case `uname -s` in
 
         function treegrep()
         {
-            T=$(gettop)    
+            T=$(getCdipTagPath)    
             if [[ -f $T/filelist ]]; then
                 echo "Searching in cache file..."
                 (
@@ -244,10 +261,11 @@ function csj()
     if [ ! "$T" ]; then
         echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
     else
-        if [ -f $T/cscope_j.out ] ; then
-            cscope -d -f $T/cscope_j.out -P $T
+        local tagPath=$(getCdipTagPath)
+        if [ -f $tagPath/cscope_j.out ] ; then
+            cscope -d -f $tagPath/cscope_j.out -P $T
         else
-            echo "code index files cscope_j.* are not found, use command refresh to construct."
+            echo "code index files cscope_j.* are not found in $tagPath ."
         fi
     fi
     unset T
@@ -259,10 +277,11 @@ function csc()
     if [ ! "$T" ]; then
         echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
     else
-        if [ -f $T/cscope_c.out ] ; then
-            cscope -d -f $T/cscope_c.out -P $T
+        local tagPath=$(getCdipTagPath)
+        if [ -f $tagPath/cscope_c.out ] ; then
+            cscope -d -f $tagPath/cscope_c.out -P $T
         else
-            echo "code index files cscope_c.* are not found, use command refresh to construct."
+            echo "code index files cscope_c.* are not found in $tagPath ."
         fi
     fi
     unset T
@@ -280,6 +299,11 @@ function mkfilelist () {
         echo -n "Creating general index..."
         find . -wholename ./out -prune -o -wholename ./stubs -prune -o -type f > filelist
         echo " Done"
+        if [ -d $CDIP_ENV ]; then
+            mv filelist $CDIP_ENV/filelist
+        else
+            echo "can not find .cdip in this project, place filelist in the project root."
+        fi
         cd $HERE
     )
 }
@@ -291,8 +315,9 @@ function buildtag () {
         echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
         return
     fi
+    local tagPath=$(getCdipTagPath)
     (
-        cd $(gettop)
+        cd $tagPath
         for files in filelist \
                      filelist_c \
                      filelist_j \
@@ -302,20 +327,29 @@ function buildtag () {
                      cscope_j.out \
                      cscope_j.out.in \
                      cscope_j.out.po \
-                     tags_c \
-                     tags_j \
                  ; do
-            if [ -f $T/$files ] ; then
-                rm $files
-            fi
+            rm $files > /dev/null
         done
         unset files
 
+        cd $T
+        for files in .cdip_tags_c \
+                     .cdip_tags_j \
+                 ; do
+            rm $files > /dev/null
+        done
+        unset files
+
+        cd $T
         echo "$T"
         mkfilelist
+        if [ ! -f $tagPath/filelist ]; then
+            echo "Error: can not build tags from filelist."
+            return
+        fi
 
         echo "Construct file list for C&C++ ..."
-        grep "\(\.[ch]$\)\|\(\.cpp\)\|\(\.hpp\)$" filelist > filelist_c
+        grep "\(\.[ch]$\)\|\(\.cpp\)\|\(\.hpp\)$" $tagPath/filelist > filelist_c
         if [ -s filelist_c ]; then
             echo "Creating cscope index for C&C++ ..."
             cscope -qvRUb -ifilelist_c | \
@@ -357,7 +391,7 @@ function buildtag () {
             mv cscope.po.out cscope_c.out.po
             echo " ... Done                 "
             echo "Creating ctags index for C&C++ ..."
-            ctags -L filelist_c -f tags_c --verbose=yes | \
+            ctags -L filelist_c -f .cdip_tags_c --verbose=yes | \
             awk '
             {
                 count+=1
@@ -393,6 +427,9 @@ function buildtag () {
                 printf "] "
             }
             ' total=`wc -l filelist_c | cut -d' ' -f1` count=0 lastTime=0
+            if [ ! $tagPath = $PWD ]; then
+                mv filelist_c cscope_c.* tags_c $tagPath
+            fi
             echo " ... Done                 "
         else
             rm filelist_c
@@ -400,7 +437,7 @@ function buildtag () {
         fi
 
         echo "Construct file list for Java ..."
-        grep "\.java$" filelist > filelist_j
+        grep "\.java$" $tagPath/filelist > filelist_j
         if [ -s filelist_j ]; then
             echo "Creating cscope index for Java ..."
             cscope -qvRUb -ifilelist_j | \
@@ -442,7 +479,7 @@ function buildtag () {
             mv cscope.po.out cscope_j.out.po
             echo " ... Done                 "
             echo "Creating ctags index for Java ..."
-            ctags -L filelist_j -f tags_j --verbose=yes | \
+            ctags -L filelist_j -f .cdip_tags_j --verbose=yes | \
             awk '
             {
                 count+=1
@@ -478,6 +515,9 @@ function buildtag () {
                 printf "] "
             }
             ' total=`wc -l filelist_j | cut -d' ' -f1` count=0 lastTime=0
+            if [ ! $tagPath = $PWD ]; then
+                mv filelist_j cscope_j.* $tagPath
+            fi
             echo " ... Done                 "
         else
             rm filelist_j
@@ -498,13 +538,14 @@ function godir () {
         echo "Couldn't locate the top of the tree.  Try setting TOP or using 'find'."
         return
     fi
-    if [[ ! -f $T/filelist ]]; then
-        echo "$T/filelist is not exist."
+    local tagPath=$(getCdipTagPath)
+    if [[ ! -f $tagPath/filelist ]]; then
+        echo "$tagPath/filelist is not exist."
         mkfilelist
         echo ""
     fi
     local lines
-    lines=($(grep "$1" $T/filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
+    lines=($(grep "$1" $tagPath/filelist | sed -e 's/\/[^/]*$//' | sort | uniq))
     if [[ ${#lines[@]} = 0 ]]; then
         echo "Not found"
         return

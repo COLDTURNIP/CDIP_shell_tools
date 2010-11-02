@@ -42,9 +42,10 @@ function settop
         read choice
         choice=`echo $choice | tr '[A-Z]' '[a-z]'`
         if [ "$choice" == 'no' -o "$choice" == 'n' ]; then
-        echo 'Do nothing.'
+            echo 'Do nothing.'
         else
             export CDIP_TOP=$(pwd $target)
+            export CDIP_TAG_PATH=$(getCdipTagPath)
             printf "%s is root path now.\n" $CDIP_TOP
         fi
     else
@@ -108,32 +109,69 @@ function goproj () {
     cd $projname
 
     # import project environment settings
-    prepareenv
+    installenv
 }
 
-function prepareenv () {
-    local ANDROID_ENV=build/envsetup.sh
+function initproj() {
+    local PROJ_UTIL_DIR=$HOME/bin/cdipTemplateRcDir
 
-    if [[ -f $ANDROID_ENV ]]; then
-        echo "including $ANDROID_ENV"
-        . $ANDROID_ENV
-        export CDIP_TOP=$PWD
+    if [[ -e .cdip ]]; then
+        echo "Error: There's .cdip folder. If you are sure to setup a project here, please remove it first."
+        return
+    elif [[ -d $PROJ_UTIL_DIR ]]; then
+        cp -r $PROJ_UTIL_DIR .cdip
+        settop
+        echo ""
+        echo "    Note: Do not forget overriding the activate/deactivate functions."
+        echo ""
+        echo "    Step 1. Edit .cdip/envsetup.sh (vi .cdip/envsetup.sh)"
+        echo "    Step 2. Import envsetup.sh to activate (source .cdip/envsetup.sh)"
+        echo ""
+    else
+        echo "Error: Can not find environment template directory. Nothing to do."
+        return
     fi
-    if [[ -f $CDIP_ENV ]]; then
-        # Execute the contents of any vendorsetup.sh files we can find.
-        for f in `/bin/ls .cdip/envsetup*.sh 2> /dev/null`
-        do
-            echo "including $f"
-            . $f
-        done
-        unset f
+}
+
+function installenv() {
+    local CDIP_ENV=".cdip"
+
+    if [[ -f $CDIP_ENV/envsetup.sh ]]; then
         export CDIP_TOP=$PWD
+        export CDIP_TAG_PATH=$(getCdipTagPath)
+        source $CDIP_ENV/envsetup.sh
+        activate
     fi
 
     # global override
     . ~/bin/cdipSrcUtils.sh
 }
 
+function uninstallenv() {
+    unset CDIP_TOP
+    unset CDIP_TAG_PATH
+    unset TOP
+}
+
+function unsetFunctionFromSh()
+{
+    T=$(gettop)
+    if [ ! "$T" ]; then
+        echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
+        return
+    fi
+
+    local HERE=$PWD
+    cd $T
+    for f in $@; do
+        if [[ -f $f ]]; then
+            for funcToRm in `cat $f | sed -n "/^\s*function /s/^\s*function\s\+\([a-zA-Z]\w\+\).*/\1/p" | sort`; do
+                unset -f $funcToRm
+            done
+        fi
+    done
+    cd $HERE > /dev/null
+}
 
 
 ####################
@@ -148,7 +186,4 @@ else
     _arrayoffset=0
 fi
 unset _xarray
-
-# scan environment settings
-prepareenv
 
