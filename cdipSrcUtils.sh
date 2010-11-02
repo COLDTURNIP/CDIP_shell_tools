@@ -141,6 +141,21 @@ function pygrep()
     fi
 }
 
+function vgrep()
+{
+    T=$(gettop)    
+    if [[ -f $T/filelist ]]; then
+        echo "Searching in cache file..."
+        (
+            local rpath=$(getrelative)
+            local HERE=$PWD
+            grep "^$rpath/.*\\.\(\(vala\)\|\(vapi\)\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+        )
+    else
+        find . -type f \( -name '*\.vala' -o -name '*\.vapi' \) -print0 | xargs -0 grep --color -C 1 -n "$@"
+    fi
+}
+
 function allgrep()
 {
     T=$(gettop)    
