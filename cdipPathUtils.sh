@@ -68,7 +68,7 @@ function godir () {
         return
     fi
     T=$(gettop)
-    if [ ! -n "$T" -o ! -f "$T" ]; then
+    if [ -n "$T" -o ! -d "$T" ]; then
         echo "Couldn't locate the top of the tree.  Try setting TOP or using 'find'."
         return
     fi
