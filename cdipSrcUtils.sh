@@ -42,10 +42,10 @@ case `uname -s` in
                 (
                     local rpath=$(getrelative)
                     local HERE=$PWD
-                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\|sh\\|mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\|sh\\|mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
                 )
             else
-                find -E . -type f -iregex '.*\.(c|h|cpp|S|java|xml|sh|mk)' -print0 | xargs -0 grep --color -C 1 -n "$@"
+                find -E . -type f -iregex '.*\.(c|h|cpp|S|java|xml|sh|mk)' -print0 | xargs -0 grep -H --color -C 1 -n "$@"
             fi
         }
 
@@ -59,10 +59,10 @@ case `uname -s` in
                 (
                     local rpath=$(getrelative)
                     local HERE=$PWD
-                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\|sh\\|mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\|sh\\|mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
                 )
             else
-                find . -type f -iregex '.*\.\(c\|h\|cpp\|S\|java\|xml\|sh\|mk\)' -print0 | xargs -0 grep --color -C 1 -n "$@"
+                find . -type f -iregex '.*\.\(c\|h\|cpp\|S\|java\|xml\|sh\|mk\)' -print0 | xargs -0 grep -H --color -C 1 -n "$@"
             fi
         }
         ;;
@@ -76,10 +76,10 @@ function jgrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath/" $T/filelist_j | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+            grep "^$rpath/" $T/filelist_j | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
         )
     else
-        find . -type f -name "*\.java" -print0 | xargs -0 grep --color -C 1 -n "$@"
+        find . -type f -name "*\.java" -print0 | xargs -0 grep -H --color -C 1 -n "$@"
     fi
 }
 
@@ -91,10 +91,10 @@ function cgrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath/" $T/filelist_c | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+            grep "^$rpath/" $T/filelist_c | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
         )
     else
-        find . -type f \( -name '*\.c' -o -name '*\.cc' -o -name '*\.cpp' -o -name '*\.h' \) -print0 | xargs -0 grep --color -C 1 -n "$@"
+        find . -type f \( -name '*\.c' -o -name '*\.cc' -o -name '*\.cpp' -o -name '*\.h' \) -print0 | xargs -0 grep -H --color -C 1 -n "$@"
     fi
 }
 
@@ -106,10 +106,10 @@ function hgrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath/.*\.h$" $T/filelist_c | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+            grep "^$rpath/.*\.h$" $T/filelist_c | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
         )
     else
-        find . -type f -name "*\.h*" -print0 | xargs -0 grep --color -C 1 -n "$@"
+        find . -type f -name "*\.h*" -print0 | xargs -0 grep -H --color -C 1 -n "$@"
     fi
 }
 
@@ -121,10 +121,10 @@ function resgrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath\\(/.*\\)*/res/.*\\.xml$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -n "$@"
+            grep "^$rpath\\(/.*\\)*/res/.*\\.xml$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -n "$@"
         )
     else
-        for dir in `find . -name res -type d`; do find $dir -type f -name '*\.xml' -print0 | xargs -0 grep --color -n "$@"; done;
+        for dir in `find . -name res -type d`; do find $dir -type f -name '*\.xml' -print0 | xargs -0 grep -H --color -n "$@"; done;
     fi
 }
 
@@ -136,10 +136,10 @@ function xmlgrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath/.*\\.xml$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -n "$@"
+            grep "^$rpath/.*\\.xml$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -n "$@"
         )
     else
-        for dir in `find . -name res -type d`; do find $dir -type f -name '*\.xml' -print0 | xargs -0 grep --color -n "$@"; done;
+        for dir in `find . -name res -type d`; do find $dir -type f -name '*\.xml' -print0 | xargs -0 grep -H --color -n "$@"; done;
     fi
 }
 
@@ -151,10 +151,10 @@ function pygrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath/.*\\.py$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+            grep "^$rpath/.*\\.py$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
         )
     else
-        find . -type f -name "*\.py" -print0 | xargs -0 grep --color -C 1 -n "$@"
+        find . -type f -name "*\.py" -print0 | xargs -0 grep -H --color -C 1 -n "$@"
     fi
 }
 
@@ -166,10 +166,10 @@ function vgrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath/.*\\.\(\(vala\)\|\(vapi\)\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+            grep "^$rpath/.*\\.\(\(vala\)\|\(vapi\)\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
         )
     else
-        find . -type f \( -name '*\.vala' -o -name '*\.vapi' \) -print0 | xargs -0 grep --color -C 1 -n "$@"
+        find . -type f \( -name '*\.vala' -o -name '*\.vapi' \) -print0 | xargs -0 grep -H --color -C 1 -n "$@"
     fi
 }
 
@@ -181,10 +181,10 @@ function allgrep()
         (
             local rpath=$(getrelative)
             local HERE=$PWD
-            grep "^$rpath/.*" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -n "$@"
+            grep "^$rpath/.*" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -n "$@"
         )
     else
-        find . -type f -print0 | xargs -0 grep --color -n "$@"
+        find . -type f -print0 | xargs -0 grep -H --color -n "$@"
     fi
 }
 
@@ -198,10 +198,10 @@ case `uname -s` in
                 (
                     local rpath=$(getrelative)
                     local HERE=$PWD
-                    grep "^$rpath/.*\\<\\(Makefile\\|Makefile\\..*\\|.*\\.make\\|.*\\.mak\\|.*\\.mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+                    grep "^$rpath/.*\\<\\(Makefile\\|Makefile\\..*\\|.*\\.make\\|.*\\.mak\\|.*\\.mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
                 )
             else
-                find -E . -type f -iregex '.*/(Makefile|Makefile\..*|.*\.make|.*\.mak|.*\.mk)' -print0 | xargs -0 grep --color -C 1 -n "$@"
+                find -E . -type f -iregex '.*/(Makefile|Makefile\..*|.*\.make|.*\.mak|.*\.mk)' -print0 | xargs -0 grep -H --color -C 1 -n "$@"
             fi
         }
 
@@ -213,10 +213,10 @@ case `uname -s` in
                 (
                     local rpath=$(getrelative)
                     local HERE=$PWD
-                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
                 )
             else
-                find -E . -type f -iregex '.*\.(c|h|cpp|S|java|xml)' -print0 | xargs -0 grep --color -C 1 -n -i "$@"
+                find -E . -type f -iregex '.*\.(c|h|cpp|S|java|xml)' -print0 | xargs -0 grep -H --color -C 1 -n -i "$@"
             fi
         }
 
@@ -230,10 +230,10 @@ case `uname -s` in
                 (
                     local rpath=$(getrelative)
                     local HERE=$PWD
-                    grep "^$rpath/.*\\<\\(Makefile\\|Makefile\\..*\\|.*\\.make\\|.*\\.mak\\|.*\\.mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+                    grep "^$rpath/.*\\<\\(Makefile\\|Makefile\\..*\\|.*\\.make\\|.*\\.mak\\|.*\\.mk\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
                 )
             else
-                find . -regextype posix-egrep -iregex '(.*\/Makefile|.*\/Makefile\..*|.*\.make|.*\.mak|.*\.mk)' -type f -print0 | xargs -0 grep --color -C 1 -n "$@"
+                find . -regextype posix-egrep -iregex '(.*\/Makefile|.*\/Makefile\..*|.*\.make|.*\.mak|.*\.mk)' -type f -print0 | xargs -0 grep -H --color -C 1 -n "$@"
             fi
         }
 
@@ -245,10 +245,10 @@ case `uname -s` in
                 (
                     local rpath=$(getrelative)
                     local HERE=$PWD
-                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep --color -C 1 -n "$@"
+                    grep "^$rpath/.*\\.\\(c\\|h\\|cpp\\|S\\|java\\|xml\\)$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
                 )
             else
-                find . -regextype posix-egrep -iregex '.*\.(c|h|cpp|S|java|xml)' -type f -print0 | xargs -0 grep --color -C 1 -n -i "$@"
+                find . -regextype posix-egrep -iregex '.*\.(c|h|cpp|S|java|xml)' -type f -print0 | xargs -0 grep -H --color -C 1 -n -i "$@"
             fi
         }
 
