@@ -27,6 +27,27 @@ function gettop
         echo $CDIP_TOP
     elif [ -n "$TOP" ] ; then
         echo $TOP
+    else
+        if [ -d $CDIP_ENV ] ; then
+            # The following circumlocution (repeated below as well) ensures
+            # that we record the true directory name and not one that is
+            # faked up with symlink names.
+            PWD= /bin/pwd
+        else
+            # We redirect cd to /dev/null in case it's aliased to
+            # a command that prints something as a side-effect
+            # (like pushd)
+            local HERE=$PWD
+            T=
+            while [ \( ! \( -f $CDIP_ENV \) \) -a \( $PWD != "/" \) ]; do
+                cd .. > /dev/null
+                T=`PWD= /bin/pwd`
+            done
+            cd $HERE > /dev/null
+            if [ -f "$T/$CDIP_ENV" ]; then
+                echo $T
+            fi
+        fi
     fi
 }
 
