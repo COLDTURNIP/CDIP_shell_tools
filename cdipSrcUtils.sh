@@ -428,7 +428,7 @@ function buildtag () {
             }
             ' total=`wc -l filelist_c | cut -d' ' -f1` count=0 lastTime=0
             if [ ! $tagPath = $PWD ]; then
-                mv filelist_c cscope_c.* tags_c $tagPath
+                mv filelist_c cscope_c.* $tagPath
             fi
             echo " ... Done                 "
         else
