@@ -137,10 +137,10 @@ function installenv() {
     local CDIP_ENV=".cdip"
 
     if [[ -f $CDIP_ENV/envsetup.sh ]]; then
-        export CDIP_TOP=$PWD
-        export CDIP_TAG_PATH=$(getCdipTagPath)
         source $CDIP_ENV/envsetup.sh
         activate
+        export CDIP_TOP=$PWD
+        export CDIP_TAG_PATH=$(getCdipTagPath)
     fi
 
     # global override
