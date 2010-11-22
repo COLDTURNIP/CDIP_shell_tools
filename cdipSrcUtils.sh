@@ -173,7 +173,7 @@ function vgrep()
     fi
 }
 
-function pygrep()
+function gogrep()
 {
     T=$(getCdipTagPath)    
     if [[ -f $T/filelist ]]; then
