@@ -173,6 +173,21 @@ function vgrep()
     fi
 }
 
+function pygrep()
+{
+    T=$(getCdipTagPath)    
+    if [[ -f $T/filelist ]]; then
+        echo "Searching in cache file..."
+        (
+            local rpath=$(getrelative)
+            local HERE=$PWD
+            grep "^$rpath/.*\\.go$" $T/filelist | sed -e "s:^$rpath:\\.:" | xargs grep -H --color -C 1 -n "$@"
+        )
+    else
+        find . -type f -name "*\.go" -print0 | xargs -0 grep -H --color -C 1 -n "$@"
+    fi
+}
+
 function allgrep()
 {
     T=$(getCdipTagPath)    
