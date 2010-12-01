@@ -1,0 +1,9 @@
+CDIP's Shell Tools
+==================
+
+TODO: I (may) write this down in the future.
+
+Basic install:
+
+ $ scons install
+
