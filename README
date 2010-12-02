@@ -1,9 +1,117 @@
-CDIP's Shell Tools
-==================
+==================================================================
+CDIP - COLDTURNIP's Developemnt Integrated Preparation shell tools
+==================================================================
 
-TODO: I (may) write this down in the future.
+-----------
+Requirement
+-----------
+
+The following tools are required:
+
+  * scons:
+      a building system for install/uninstall
+
+  * ctags & cscope:
+      tagging tools for building tags in codebases
+
+  * awk (or other extensions over the 7th Edition AWK):
+      to showing the progressing bar
+
+  NOTE: if your awk doesn't support AWK 7e (e.g. default mawk in Ubuntu 10.10),
+        then the "buildtag" function may not work.
+
+These tools assumes that your codebases are placed under the following
+directories: $HOME/worksrc/ and $HOME/mysrc/ . If not, please modify the
+"goproj" function in the cdipPathUtils.sh .
+
+
+-----------------
+Install/Uninstall
+-----------------
 
 Basic install:
 
- $ scons install
+  $ cd path/to/CDIP_shell_tools
+  $ [PREFIX=your/installation/path] scons install
+
+  note that the default PREFIX is your $HOME .
+  After that, add the following two lines at the end of your .bashrc file
+  
+  . your/installation/path/bin/cdipPathUtils.sh
+  . your/installation/path/bin/cdipSrcUtils.sh
+
+
+Uninstall:
+
+  $ cd path/to/CDIP_shell_tools
+  $ scons -c install
+
+  and do not forget to  remove unnecessary lines in your .bashrc file.
+
+
+-----
+Usage
+-----
+
+Initialize a new codebase:
+
+  $ mkdir path/to/codebase
+  $ cd path/to/codebase
+  $ initproj
+
+  then edit the path/to/codebase/.cdip/envsetup.sh if need. After
+  initialization, use goproj command to load the settings.
+
+
+Jump to the specific codebase and load the local settings in the codebase:
+
+  $ goproj [project_name]
+
+  if you left the name empty, it will list all the codebases out.
+
+
+Jump to the root of the codebase:
+
+  $ croot
+
+
+Set root path to specific directory:
+
+  $ settop [path]
+  the default path is current work directory $PWD
+
+
+Build searching cache and source tag files under the codebase:
+
+  $ buildtag
+  this may take some minutes. You may need to do this after makeing some
+  big changes to the codebase (e.g. repo sync).
+
+
+Searching strings in the codebase:
+
+  for example, searching "android" in *.xml
+  $ xmlgrep "android"
+
+  currently, we support the following source files:
+    * C/C++: *.c, *.cpp, *.h, *.hpp
+    * Java: *.java
+    * Python: *.py
+    * Google Go: *.go
+    * Vala: *.vala, *.vapi
+    * GNU Make: Makefile, Makefile.*, *.make, *.mak, *.mk
+
+
+Reload .bashrc without logout
+
+  $ reload
+
+
+---------------
+VIM Integration
+---------------
+
+If you're using VIM and using Cscope plugin, the vimball cdip_shell_tools.vba
+can help you the load tag files autometically when you open any source files
+in the code base. Just open it with VIM and use ":so %" command to install it.
 

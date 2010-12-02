@@ -22,6 +22,10 @@ function activate()
     #
     # TODO: write down your initialization procedure here.
     #
+    # Example: for Android, import envsetup.sh for build
+    #
+    #     source build/envsetup.sh
+    #     lunch 8
 }
 
 function deactivate()
@@ -30,6 +34,14 @@ function deactivate()
     #
     # TODO: write down your destruct procedure here.
     #
+    # Example: for Android, clear the functions imported from envsetup.sh
+    #
+    #     for shf in `/bin/ls vendor/*/vendorsetup.sh vendor/*/build/vendorsetup.sh 2> /dev/null`
+    #     do
+    #         echo "unset functions from $shf"
+    #         unsetFunctionFromSh $shf
+    #     done
+    #     unset f
 
     if [ ! "$1" = "nondestructive" ]; then
         # Self destruct!
