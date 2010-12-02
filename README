@@ -115,6 +115,13 @@ If you're using VIM and using Cscope plugin, the vimball cdip_shell_tools.vba
 can help you the load tag files autometically when you open any source files
 in the code base. Just open it with VIM and use ":so %" command to install it.
 
+If your Cscope installation path is not in your $PATH, then you'll need to
+add
+
+    set csprg=~/bin/cscope
+
+in your .vimrc file.
+
 
 -------------------------
 Bug Reporting And Support
