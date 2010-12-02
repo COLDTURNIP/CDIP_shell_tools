@@ -2,14 +2,11 @@
 UseVimball
 finish
 plugin/cdip_shell_tool.vim	[[[1
-53
+50
 "
 " Try to load Cscope tags under the codebase's local setting
 "
 if has("cscope")
-    set csto=1
-    set cst
-    set nocsverb
     " add any database in current directory
     if filereadable("cscope.out")
         cs add cscope.out
