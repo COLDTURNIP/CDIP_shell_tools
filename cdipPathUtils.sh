@@ -23,12 +23,12 @@ function getrelative()
 
 function gettop
 {
-    if [ -n "$CDIP_TOP" ] ; then
-        echo $CDIP_TOP
+    if [ -n "$R_CODEBASE_TOP" ] ; then
+        echo $R_CODEBASE_TOP
     elif [ -n "$TOP" ] ; then
         echo $TOP
     else
-        if [ -d $CDIP_ENV ] ; then
+        if [ -d $R_CODEBASE_ENV ] ; then
             # The following circumlocution (repeated below as well) ensures
             # that we record the true directory name and not one that is
             # faked up with symlink names.
@@ -39,12 +39,12 @@ function gettop
             # (like pushd)
             local HERE=$PWD
             T=
-            while [ \( ! \( -f $CDIP_ENV \) \) -a \( $PWD != "/" \) ]; do
+            while [ \( ! \( -f $R_CODEBASE_ENV \) \) -a \( $PWD != "/" \) ]; do
                 cd .. > /dev/null
                 T=`PWD= /bin/pwd`
             done
             cd $HERE > /dev/null
-            if [ -f "$T/$CDIP_ENV" ]; then
+            if [ -f "$T/$R_CODEBASE_ENV" ]; then
                 echo $T
             fi
         fi
@@ -65,9 +65,9 @@ function settop
         if [ "$choice" == 'no' -o "$choice" == 'n' ]; then
             echo 'Do nothing.'
         else
-            export CDIP_TOP=$(pwd $target)
-            export CDIP_TAG_PATH=$(getCdipTagPath)
-            printf "%s is root path now.\n" $CDIP_TOP
+            export R_CODEBASE_TOP=$(pwd $target)
+            export R_CODEBASE_TAG_PATH=$(getCdipTagPath)
+            printf "%s is root path now.\n" $R_CODEBASE_TOP
         fi
     else
         printf "Invalid path %s . Please check your silly path  :(\n" $target
@@ -155,13 +155,13 @@ function initproj() {
 }
 
 function installenv() {
-    local CDIP_ENV=".cdip"
+    local R_CODEBASE_ENV=".cdip"
 
-    if [[ -f $CDIP_ENV/envsetup.sh ]]; then
-        source $CDIP_ENV/envsetup.sh
+    if [[ -f $R_CODEBASE_ENV/envsetup.sh ]]; then
+        source $R_CODEBASE_ENV/envsetup.sh
         activate
-        export CDIP_TOP=$PWD
-        export CDIP_TAG_PATH=$(getCdipTagPath)
+        export R_CODEBASE_TOP=$PWD
+        export R_CODEBASE_TAG_PATH=$(getCdipTagPath)
     fi
 
     # global override
@@ -169,8 +169,8 @@ function installenv() {
 }
 
 function uninstallenv() {
-    unset CDIP_TOP
-    unset CDIP_TAG_PATH
+    unset R_CODEBASE_TOP
+    unset R_CODEBASE_TAG_PATH
     unset TOP
 }
 

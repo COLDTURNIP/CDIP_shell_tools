@@ -15,7 +15,7 @@
 # Global Variables #
 ####################
 
-export CDIP_ENV=".cdip"
+export R_CODEBASE_ENV=".cdip"
 
 
 #####################
@@ -25,8 +25,8 @@ export CDIP_ENV=".cdip"
 function getCdipTagPath()
 {
     local ret=$(gettop)
-    if [[ -d $ret/$CDIP_ENV ]]; then
-        echo $ret/$CDIP_ENV
+    if [[ -d $ret/$R_CODEBASE_ENV ]]; then
+        echo $ret/$R_CODEBASE_ENV
     else
         echo $ret
     fi
@@ -314,8 +314,8 @@ function mkfilelist () {
         echo -n "Creating general index..."
         find . -wholename ./out -prune -o -wholename ./stubs -prune -o -type f > filelist
         echo " Done"
-        if [ -d $CDIP_ENV ]; then
-            mv filelist $CDIP_ENV/filelist
+        if [ -d $R_CODEBASE_ENV ]; then
+            mv filelist $R_CODEBASE_ENV/filelist
         else
             echo "can not find .cdip in this project, place filelist in the project root."
         fi
@@ -348,8 +348,8 @@ function buildtag () {
         unset files
 
         cd $T
-        for files in .cdip_tags_c \
-                     .cdip_tags_j \
+        for files in .r_codebase_tags_c \
+                     .r_codebase_tags_j \
                  ; do
             rm $files > /dev/null
         done
@@ -406,7 +406,7 @@ function buildtag () {
             mv cscope.po.out cscope_c.out.po
             echo " ... Done                 "
             echo "Creating ctags index for C&C++ ..."
-            ctags -L filelist_c -f .cdip_tags_c --verbose=yes | \
+            ctags -L filelist_c -f .r_codebase_tags_c --verbose=yes | \
             awk '
             {
                 count+=1
@@ -494,7 +494,7 @@ function buildtag () {
             mv cscope.po.out cscope_j.out.po
             echo " ... Done                 "
             echo "Creating ctags index for Java ..."
-            ctags -L filelist_j -f .cdip_tags_j --verbose=yes | \
+            ctags -L filelist_j -f .r_codebase_tags_j --verbose=yes | \
             awk '
             {
                 count+=1
