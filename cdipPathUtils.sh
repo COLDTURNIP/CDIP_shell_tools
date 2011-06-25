@@ -200,8 +200,8 @@ function unsetFunctionFromSh()
 ####################
 
 # decide array indexing scheme
-if [ -z "${_xarray[${#_xarray[@]}]}" ]
-then
+_xarray=(a b c)
+if [ -z "${_xarray[${#_xarray[@]}]}" ]; then
     _arrayoffset=1
 else
     _arrayoffset=0
