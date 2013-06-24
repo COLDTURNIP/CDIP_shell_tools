@@ -58,16 +58,19 @@ function settop
         target=$PWD
     fi
     local choice
-    if [ -d $target ]; then
+    if [[ -d $target ]]; then
         printf "Set root path to  %s ? [Y/n] " $target
         read choice
         choice=`echo $choice | tr '[A-Z]' '[a-z]'`
-        if [ "$choice" == 'no' -o "$choice" == 'n' ]; then
+        if [[ $choice == 'no' ]] || [[ $choice == 'n' ]]; then
             echo 'Do nothing.'
         else
-            export R_CODEBASE_TOP=$(pwd $target)
+            local oldpath=$PWD
+            cd $target
+            export R_CODEBASE_TOP=$PWD
             export R_CODEBASE_TAG_PATH=$(getCdipTagPath)
             printf "%s is root path now.\n" $R_CODEBASE_TOP
+            cd $oldpath
         fi
     else
         printf "Invalid path %s . Please check your silly path  :(\n" $target
