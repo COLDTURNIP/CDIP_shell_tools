@@ -87,6 +87,7 @@ function croot()
 function goproj () {
     local WORKSRC=$HOME/worksrc/
     local MYWORKSRC=$HOME/mysrc/
+    local OTHERSRC=$HOME/othersrc/
 
     local target=$1
     if [[ -z "$target" ]]; then
@@ -95,10 +96,11 @@ function goproj () {
     echo -n "Creating index..."
     (cd $WORKSRC; find $WORKSRC -mindepth 1 -maxdepth 1 \( -type d -o -type l \) > projlist)
     (cd $MYWORKSRC; find $MYWORKSRC -mindepth 1 -maxdepth 1 \( -type d -o -type l \) > projlist)
+    (cd $OTHERSRC; find $OTHERSRC -mindepth 1 -maxdepth 1 \( -type d -o -type l \) > projlist)
     echo " Done"
     echo ""
     local lines
-    lines=($(grep "$target" $WORKSRC/projlist $MYWORKSRC/projlist | sed -e 's/^.*://' | sort | uniq))
+    lines=($(grep "$target" $WORKSRC/projlist $MYWORKSRC/projlist $OTHERSRC/projlist | sed -e 's/^.*://' | sort | uniq))
     if [[ ${#lines[@]} = 0 ]]; then
         echo "Not found"
         return
