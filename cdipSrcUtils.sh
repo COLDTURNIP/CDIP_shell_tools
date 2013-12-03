@@ -312,7 +312,11 @@ function mkfilelist () {
     (
         cd $T
         echo -n "Creating general index..."
-        find . -wholename ./out -prune -o -wholename ./stubs -prune -o -type f > filelist
+        find . \( -wholename ./out -o -wholename ./stubs -o -name .git -o -name .hg -o -name .repo \) -prune -a -type f > filelist
+        find . \( -wholename ./.cdip -o \
+                  -wholename ./out -o -wholename ./stubs -o \
+                  -name .git -o -name .hg -o -name .repo \) \
+                -prune -o -print > filelist
         echo " Done"
         if [ -d $R_CODEBASE_ENV ]; then
             mv filelist $R_CODEBASE_ENV/filelist
@@ -362,6 +366,10 @@ function buildtag () {
             echo "Error: can not build tags from filelist."
             return
         fi
+
+        echo "Construct ID tags ..."
+        ln -s $tagPath/filelist id-lang.map 2>/dev/null
+        gj -i
 
         echo "Construct file list for C&C++ ..."
         grep "\(\.[ch]$\)\|\(\.cpp\)\|\(\.hpp\)$\|\(.cc\)$" $tagPath/filelist > filelist_c
