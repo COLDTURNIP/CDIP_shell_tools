@@ -15,6 +15,11 @@
 # Utility Functions #
 #####################
 
+function realpath()
+{
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 function getrelative()
 {
     local pattern=`echo $(gettop) | sed -e 's:/:\\\\/:g'`
@@ -145,7 +150,7 @@ function initproj() {
         echo "Error: There's .cdip folder. If you are sure to setup a project here, please remove it first."
         return
     elif [[ -d $PROJ_UTIL_DIR ]]; then
-        cp -Lr $PROJ_UTIL_DIR .cdip
+        cp -LR $PROJ_UTIL_DIR .cdip
         settop
         echo ""
         echo "    Note: Do not forget overriding the activate/deactivate functions."
