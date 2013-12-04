@@ -1,0 +1,6 @@
+*.idl text
+*.ipdl text
+*.js text
+*.jsm text
+*.in text
+*.mk text

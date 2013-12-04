@@ -368,8 +368,7 @@ function buildtag () {
         fi
 
         echo "Construct ID tags ..."
-        ln -s $tagPath/filelist id-lang.map 2>/dev/null
-        gj -i
+        mkid -m $tagPath/idutil-lang-map
 
         echo "Construct file list for C&C++ ..."
         grep "\(\.[ch]$\)\|\(\.cpp\)\|\(\.hpp\)$\|\(.cc\)$" $tagPath/filelist > filelist_c
