@@ -374,7 +374,7 @@ function buildtag () {
         grep "\(\.[ch]$\)\|\(\.cpp\)\|\(\.hpp\)$\|\(.cc\)$" $tagPath/filelist > filelist_c
         if [ -s filelist_c ]; then
             echo "Creating cscope index for C&C++ ..."
-            cscope -qvRUb -ifilelist_c | \
+            cscope -qvRUb -ifilelist_c 2>/dev/null | \
             awk '
             {
                 count=$5
@@ -462,7 +462,7 @@ function buildtag () {
         grep "\.java$" $tagPath/filelist > filelist_j
         if [ -s filelist_j ]; then
             echo "Creating cscope index for Java ..."
-            cscope -qvRUb -ifilelist_j | \
+            cscope -qvRUb -ifilelist_j 2>/dev/null | \
             awk '
             {
                 count=$5
